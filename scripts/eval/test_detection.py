@@ -24,12 +24,13 @@ import argparse
 
 def eval_model(args):
     pretrained = args.model_checkpoint
-    model_name = "llava_qwen"
+    model_name = "llava_qwen_lora"
     device = "cuda"
     device_map = "auto"
     overwrite_config = {'tie_word_embeddings': False, 'use_cache': True, 'vocab_size': 152064}
     overwrite_config = {'vocab_size': 152064}
-    tokenizer, model, image_processor, max_length = load_pretrained_model(pretrained, None, model_name, device_map=device_map, cache_dir='./cache', torch_dtype="bfloat16", overwrite_config=overwrite_config)
+    model_base = "lmms-lab/llava-onevision-qwen2-7b-ov"
+    tokenizer, model, image_processor, max_length = load_pretrained_model(pretrained, model_base, model_name, device_map=device_map, torch_dtype="bfloat16", overwrite_config=overwrite_config)
     
     if args.size != '7b':
         model.lm_head.weight = model.model.embed_tokens.weight
